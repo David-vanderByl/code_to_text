@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: code-to-text
-Version: 0.1
+Version: 0.2
 Summary: Extracts and combines all code from a project into a markdown or txt file.
 Home-page: https://github.com/David-vanderByl/code_to_text.git
 Author: David van der Byl
