@@ -1,2 +1,2 @@
 [console_scripts]
-my_package = my_package.main:main
+all_code = code_to_text.main:main

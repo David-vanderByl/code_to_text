@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="code_to_text",
-    version="0.1",
+    version="0.2",
     packages=find_packages(include=['code_to_text', 'code_to_text.*']),
     description="Extracts and combines all code from a project into a markdown or txt file.",
     long_description=open('README.md').read(),

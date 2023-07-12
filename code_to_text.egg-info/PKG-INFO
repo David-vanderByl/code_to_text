@@ -48,7 +48,7 @@ all_code --code-extensions py java js cpp c rb go rs
 Specify the files and directories to exclude:
 
 ```shell
-code_extractor --exclude-files init.py setup.py --exclude-dirs .git __pycache__ dist
+all_code --exclude-files init.py setup.py --exclude-dirs .git __pycache__ dist
 ```
 
 
