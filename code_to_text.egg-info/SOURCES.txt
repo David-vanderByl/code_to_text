@@ -1,0 +1,12 @@
+README.md
+setup.py
+code_to_text/__init__.py
+code_to_text/main.py
+code_to_text.egg-info/PKG-INFO
+code_to_text.egg-info/SOURCES.txt
+code_to_text.egg-info/dependency_links.txt
+code_to_text.egg-info/entry_points.txt
+code_to_text.egg-info/requires.txt
+code_to_text.egg-info/top_level.txt
+tests/__init__.py
+tests/test_main.py

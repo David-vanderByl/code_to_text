@@ -1,0 +1,53 @@
+# add files where needed
+
+# Compiled Python files
+*.pyc
+__pycache__/
+
+# Compiled binaries and build artifacts
+*.exe
+*.dll
+*.so
+*.dylib
+dist/
+build/
+
+# Virtual environments
+venv/
+.venv/
+env/
+.env/
+
+# Editor and IDE files
+.idea/
+.vscode/
+.pycharm/
+*.sublime-*
+
+# Dependency management files
+requirements.txt
+Pipfile.lock
+poetry.lock
+
+# System and environment files
+.DS_Store
+Thumbs.db
+.env
+.env.*
+
+# Log files
+*.log
+
+# Compiled assets and media files
+*.png
+*.jpg
+*.gif
+*.svg
+
+# Configuration files with sensitive information
+config.ini
+secrets.json
+
+# Temporary and cache files
+.cache/
+.tmp/

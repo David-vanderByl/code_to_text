@@ -3,14 +3,22 @@ Get all code from project into one markdown or txt file - useful for inputting c
 """
 
 import os
+import argparse
 from pygments.lexers import get_lexer_for_filename, ClassNotFound
 
-def get_files_in_dir(dir_path, code_extensions, exclude_files):
+DEFAULT_EXTENSIONS = ['py', 'java', 'js', 'cpp', 'c', 'rb', 'go', 'rs']
+DEFAULT_EXCLUDE_FILES = ['__init__.py', 'setup.py', 'test_main.py']  # add more filenames as needed
+DEFAULT_EXCLUDE_DIRS = ['__pycache__', '.git', 'venv']  # common directories to exclude
+
+
+
+def get_files_in_dir(dir_path, code_extensions, exclude_files, exclude_dirs):
     """
     Generate all file paths in a directory and its subdirectories, 
     excluding files with certain names or extensions.
     """
-    for dirpath, _, filenames in os.walk(dir_path):  # Iterate over all directories and files in the given directory
+    for dirpath, dirnames, filenames in os.walk(dir_path):   # Iterate over all directories and files in the given directory
+        dirnames[:] = [d for d in dirnames if d not in exclude_dirs]  # remove directories from the traversal that are in the exclude list
         for filename in filenames:  # Iterate over each file in the current directory
             if filename in exclude_files:  # If the file is in the exclude list, skip it
                 continue
@@ -29,14 +37,14 @@ def get_code_language(filename):
         language = 'nohighlight'
     return language
 
-def write_files_to_markdown(dir_path, output_path, code_extensions, exclude_files):
+def all_code(dir_path, output_path, code_extensions, exclude_files, exclude_dirs):
     """
     Write all code files in a directory and its subdirectories to a markdown or txt file.
     Each section of code is preceded by the filename and language, enclosed in markdown code fences.
     """
     with open(output_path, 'w') as output_file:  # Open the output file in write mode
         # Iterate over all code files in the directory and its subdirectories
-        for file_path in get_files_in_dir(dir_path, code_extensions, exclude_files):
+        for file_path in get_files_in_dir(dir_path, code_extensions, exclude_files, exclude_dirs):
             lang = get_code_language(file_path)  # Get the language of the current file
             output_file.write(f'{os.path.basename(file_path)}\n')  # Write the filename to the output file
             output_file.write(f'```{lang}\n')  # Write the start of a markdown code block, with the language specifier
@@ -45,13 +53,28 @@ def write_files_to_markdown(dir_path, output_path, code_extensions, exclude_file
                 output_file.write(code)  # Write the contents to the output file
             output_file.write('\n```\n\n')  # Write the end of the markdown code block
 
+def main():
+    parser = argparse.ArgumentParser(description='Extract code files from a directory into a single txt or md file.')
+    parser.add_argument('--dir_path', default=os.getcwd(), help='The path to the directory to extract code from. Defaults to the current directory.')
+    parser.add_argument('--output_path', default=os.path.join(os.getcwd(), 'all_code.txt'), 
+                        help='The path to the output file (with .txt or .md extension). Defaults to "all_code.txt" in the current directory.')
+    parser.add_argument('--all-extensions', action='store_true',
+                        help='If set, include files of all extensions. By default, only includes the following extensions: ' + ', '.join(DEFAULT_EXTENSIONS))
+    parser.add_argument('--exclude-files', default=','.join(DEFAULT_EXCLUDE_FILES),
+                        help='A string of filenames to exclude, separated by commas. Defaults to: ' + ', '.join(DEFAULT_EXCLUDE_FILES))
+    parser.add_argument('--exclude-dirs', default=','.join(DEFAULT_EXCLUDE_DIRS),
+                        help='A string of directory names to exclude, separated by commas. Defaults to: ' + ', '.join(DEFAULT_EXCLUDE_DIRS))
+    
+    args = parser.parse_args()
+
+    # Split the --exclude-files and --exclude-dirs arguments into lists, using comma as the delimiter
+    exclude_files = args.exclude_files.split(',')
+    exclude_dirs = args.exclude_dirs.split(',')
+
+    # If --all-extensions is set, use an empty list to include all files. Otherwise, use the default extensions.
+    code_extensions = [] if args.all_extensions else DEFAULT_EXTENSIONS
+
+    all_code(args.dir_path, args.output_path, code_extensions, exclude_files, exclude_dirs)
+
 if __name__ == "__main__":
-    # Define the path to the directory to read files from, and the path to the output file
-    dir_path = 'DS_toolbox/box_1_data_collection/web_extraction_tools'
-    output_path = dir_path + '/allcode.txt' # change extension to .md if you want change to markdown output
-    # Define a list of file extensions that are considered to be code
-    code_extensions = ['py', 'java', 'js', 'cpp', 'c', 'rb', 'go', 'rs']  
-    # Define a list of filenames to exclude
-    exclude_files = ['__init__.py']
-    # Call the function to write all code files to the output file
-    write_files_to_markdown(dir_path, output_path, code_extensions, exclude_files)
+    main()

@@ -1,6 +1,15 @@
 import os
+import sys
 import tempfile
-from code_to_text.main import write_files_to_markdown, get_files_in_dir, get_code_language
+
+# Get the path of the current script
+current_dir = os.path.dirname(os.path.abspath(__file__))
+# Get the path of the root directory
+root_dir = os.path.abspath(os.path.join(current_dir, '..'))
+# Add the root directory to the system path
+sys.path.append(root_dir)
+
+from code_to_text.main import all_code, get_files_in_dir, get_code_language
 
 def test_get_files_in_dir():
     """
@@ -10,14 +19,19 @@ def test_get_files_in_dir():
     with tempfile.TemporaryDirectory() as temp_dir:  
         file_exts = ['py', 'txt', 'java']  # Create some test files with these extensions
         exclude_files = ['exclude.py']
+        exclude_dirs = ['exclude_dir']
+        # Create a directory to exclude
+        os.mkdir(os.path.join(temp_dir, 'exclude_dir'))
+
         files = [f'test.{ext}' for ext in file_exts] + exclude_files  # List of file names
         for file in files:  # Create each file in the temp directory
             open(os.path.join(temp_dir, file), 'w').close()
 
-        code_files = list(get_files_in_dir(temp_dir, ['py', 'java'], exclude_files))  # Get the code files in the temp directory
+        code_files = list(get_files_in_dir(temp_dir, ['py', 'java'], exclude_files, exclude_dirs))  # Get the code files in the temp directory
         assert len(code_files) == 2  # There should be two code files: 'test.py' and 'test.java'
         assert os.path.join(temp_dir, 'test.txt') not in code_files  # The .txt file should not be included
         assert os.path.join(temp_dir, 'exclude.py') not in code_files  # The 'exclude.py' file should not be included
+        assert os.path.join(temp_dir, 'exclude_dir') not in code_files  # The 'exclude_dir' directory should not be included
 
 def test_get_code_language():
     """
@@ -27,9 +41,9 @@ def test_get_code_language():
     assert get_code_language('test.java') == 'java'  # Java files should return 'java'
     assert get_code_language('test.unknown') == 'nohighlight'  # Files with an unknown extension should return 'nohighlight'
 
-def test_write_files_to_markdown():
+def test_code_extractor():
     """
-    Test the write_files_to_markdown function by creating a temporary directory with a test Python file,
+    Test the all_code function by creating a temporary directory with a test Python file,
     running the function, and checking the contents of the output file.
     """
     with tempfile.TemporaryDirectory() as temp_dir:  
@@ -38,7 +52,7 @@ def test_write_files_to_markdown():
             f.write('print("Hello, world!")')  # Write some test code to the input file
 
         output_file_path = os.path.join(temp_dir, 'output.md')  # Path to the output file
-        write_files_to_markdown(temp_dir, output_file_path, ['py'], [])  # Run the function
+        all_code(temp_dir, output_file_path, ['py'], [], [])  # Run the function
 
         with open(output_file_path, 'r') as f:
             contents = f.read()  # Read the contents of the output file

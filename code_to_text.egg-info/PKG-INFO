@@ -1,3 +1,16 @@
+Metadata-Version: 2.1
+Name: code-to-text
+Version: 0.1
+Summary: Extracts and combines all code from a project into a markdown or txt file.
+Home-page: https://github.com/David-vanderByl/code_to_text.git
+Author: David van der Byl
+Author-email: your.email@example.com
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+
 # Code to Text
 
 A tool to extract all code from a project into a single markdown or text file. Useful for inputting code into large language models.
