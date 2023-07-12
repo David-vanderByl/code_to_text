@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 setup(
     name="code_to_text",
     version="0.1",
-    packages=find_packages(include=['code_to_text', 'code_to_text.*', 'tests', 'tests.*']),
+    packages=find_packages(include=['code_to_text', 'code_to_text.*']),
     description="Extracts and combines all code from a project into a markdown or txt file.",
     long_description=open('README.md').read(),
     long_description_content_type="text/markdown",
@@ -21,7 +21,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'my_package=my_package.main:main',
+            'all_code=code_to_text.main:main',
         ],
     },
 )
