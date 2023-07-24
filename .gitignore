@@ -1,5 +1,8 @@
 # add files where needed
 
+# important if repo in icloud
+*.icloud
+
 # Compiled Python files
 *.pyc
 __pycache__/
